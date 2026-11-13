@@ -1,0 +1,335 @@
+.emotional-visualizer-card {
+  padding: 1.25rem 1.75rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.visualizer-content {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+/* Resonance Orb */
+.orb-wrapper {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.core-orb {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 0 25px rgba(129, 140, 248, 0.4);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pearl-nucleus {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FFFFFF 0%, #D4C7B3 100%);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.8);
+  animation: orbBreathe 3s infinite ease-in-out;
+}
+
+.current-emoji {
+  display: none;
+}
+
+.orb-icon {
+  color: #ffffff;
+}
+
+.pulse-heart {
+  animation: heartPulse 1.2s infinite ease-in-out;
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
+}
+
+.resonance-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+  pointer-events: none;
+  animation: orbBreathe 4s infinite ease-in-out;
+}
+
+.ring-1 {
+  width: 70px;
+  height: 70px;
+  opacity: 0.6;
+}
+
+.ring-2 {
+  width: 86px;
+  height: 86px;
+  animation-delay: -1.3s;
+  opacity: 0.4;
+}
+
+.ring-3 {
+  width: 104px;
+  height: 104px;
+  animation-delay: -2.6s;
+  opacity: 0.2;
+}
+
+@keyframes orbBreathe {
+  0%, 100% { transform: scale(0.95); opacity: 0.25; }
+  50% { transform: scale(1.08); opacity: 0.65; }
+}
+
+/* Color Themes based on Emotion */
+.theme-neutral .core-orb {
+  background: radial-gradient(circle at 30% 30%, #818cf8, #4338ca);
+}
+.theme-neutral .resonance-ring { border-color: #818cf8; }
+
+.theme-burnout .core-orb {
+  background: radial-gradient(circle at 30% 30%, #38bdf8, #0369a1);
+}
+.theme-burnout .resonance-ring { border-color: #38bdf8; }
+
+.theme-anxiety .core-orb {
+  background: radial-gradient(circle at 30% 30%, #fb923c, #c2410c);
+}
+.theme-anxiety .resonance-ring { border-color: #fb923c; }
+
+.theme-grief .core-orb {
+  background: radial-gradient(circle at 30% 30%, #a78bfa, #6d28d9);
+}
+.theme-grief .resonance-ring { border-color: #a78bfa; }
+
+.theme-joy .core-orb {
+  background: radial-gradient(circle at 30% 30%, #fbbf24, #d97706);
+}
+.theme-joy .resonance-ring { border-color: #fbbf24; }
+
+.theme-vulnerable .core-orb {
+  background: radial-gradient(circle at 30% 30%, #f472b6, #be185d);
+}
+.theme-vulnerable .resonance-ring { border-color: #f472b6; }
+
+/* States */
+.orb-wrapper.speaking .core-orb {
+  animation: speakingRipple 1s infinite alternate;
+}
+
+@keyframes speakingRipple {
+  0% { transform: scale(1); filter: brightness(1); }
+  100% { transform: scale(1.12); filter: brightness(1.25); }
+}
+
+.orb-wrapper.listening .core-orb {
+  animation: listeningExpand 1.5s infinite ease-in-out;
+}
+
+@keyframes listeningExpand {
+  0%, 100% { transform: scale(1.02); }
+  50% { transform: scale(1.15); box-shadow: 0 0 35px rgba(244, 114, 182, 0.6); }
+}
+
+/* Emotional Meta Info */
+.emotional-meta {
+  flex: 1;
+}
+
+.meta-headline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.meta-badge {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #f1f5f9;
+  letter-spacing: -0.2px;
+}
+
+.intensity-chip {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+}
+
+.meta-description {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #94a3b8;
+  margin-bottom: 0.6rem;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.grounding-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  background: rgba(99, 102, 241, 0.15);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #c7d2fe;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.grounding-toggle-btn:hover {
+  background: rgba(99, 102, 241, 0.25);
+  transform: translateY(-1px);
+}
+
+/* Grounding Mode */
+.grounding-mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.5rem 0;
+  animation: fadeIn 0.4s ease;
+}
+
+.grounding-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.grounding-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #e2e8f0;
+}
+
+.grounding-icon {
+  color: #38bdf8;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.breath-circle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.75rem 0 1rem;
+}
+
+.breath-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.3);
+}
+
+.breath-circle.inhale {
+  transform: scale(1.28);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, rgba(99, 102, 241, 0.2) 100%);
+  border: 2px solid #38bdf8;
+}
+
+.breath-circle.hold {
+  transform: scale(1.28);
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.4) 0%, rgba(99, 102, 241, 0.2) 100%);
+  border: 2px solid #a78bfa;
+}
+
+.breath-circle.exhale {
+  transform: scale(0.85);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, rgba(15, 23, 42, 0.4) 100%);
+  border: 2px solid #34d399;
+}
+
+.breath-circle.rest {
+  transform: scale(0.85);
+  background: radial-gradient(circle, rgba(148, 163, 184, 0.2) 0%, rgba(15, 23, 42, 0.4) 100%);
+  border: 2px solid #64748b;
+}
+
+.breath-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.phase-text {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.countdown-number {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  opacity: 0.9;
+}
+
+.grounding-hint {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .visualizer-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  .meta-headline {
+    justify-content: center;
+  }
+  .quick-actions {
+    justify-content: center;
+  }
+}
+

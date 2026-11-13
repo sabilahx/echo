@@ -1,0 +1,38 @@
+/* src/components/PipelineStatus.css */
+.pipeline-compact-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.85rem;
+  margin-bottom: 0.6rem;
+  border-radius: 8px;
+  background: rgba(167, 139, 250, 0.08);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  animation: fadeIn 0.2s ease;
+}
+
+.compact-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pulse-indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #A78BFA;
+  box-shadow: 0 0 8px #A78BFA;
+  animation: pulseDot 1.2s infinite;
+}
+
+.compact-icon {
+  color: #C4B5FD;
+}
+
+.compact-label {
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: #E2E8F0;
+  letter-spacing: 0.01em;
+}

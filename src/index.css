@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  /* Editorial Dark Palette */
+  --bg-dark: #080C14;
+  --bg-surface: #0E1320;
+  --bg-surface-elevated: #141B2D;
+  --bg-gradient: radial-gradient(circle at 50% -10%, #171F38 0%, #080C14 85%);
+  
+  --glass-bg: rgba(14, 19, 32, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.09);
+  --glass-border-hover: rgba(226, 217, 204, 0.28);
+  
+  /* Luxury Champagne & Pearl Accents */
+  --accent-gold: #E2D9CC;
+  --accent-gold-glow: rgba(226, 217, 204, 0.15);
+  --accent-primary: #C5B8A5;
+  --accent-secondary: #938574;
+  --accent-sage: #81A89A;
+  
+  --text-main: #F8FAFC;
+  --text-muted: #8E9BAE;
+  --text-subtle: #57657A;
+
+  --radius-xl: 20px;
+  --radius-lg: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  
+  --user-msg-bg: rgba(25, 33, 52, 0.85);
+  --agent-msg-bg: rgba(14, 19, 32, 0.9);
+  --agent-msg-border: rgba(226, 217, 204, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-dark);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography Utility: Playfair Display Headline */
+.font-editorial {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* Glassmorphism Luxury Surface */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.glass-panel:hover {
+  border-color: var(--glass-border-hover);
+}
+
+/* Animated Slide Transitions */
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideRightFade {
+  0% {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes subtleFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.slide-up {
+  animation: slideUpFade 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.slide-up-delayed {
+  animation: slideUpFade 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.slide-up-delayed-2 {
+  animation: slideUpFade 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}

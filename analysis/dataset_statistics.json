@@ -1,0 +1,22 @@
+{
+  "total_records": 20000,
+  "splits": {
+    "train": 16000,
+    "validation": 2000,
+    "test": 2000
+  },
+  "class_distribution": {
+    "joy": 6761,
+    "sadness": 5797,
+    "anger": 2709,
+    "fear": 2373,
+    "love": 1641,
+    "surprise": 719
+  },
+  "text_length_stats": {
+    "mean_words": 19.13505,
+    "median_words": 17.0,
+    "max_words": 66,
+    "min_words": 2
+  }
+}

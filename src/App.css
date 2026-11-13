@@ -1,0 +1,64 @@
+/* src/App.css */
+.echo-app-root {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  color: #F8FAFC;
+}
+
+.echo-main-content {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.echo-app-footer {
+  margin-top: 1rem;
+  padding: 0.75rem 0 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  text-align: center;
+  font-size: 0.75rem;
+  color: #64748B;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.footer-tagline strong {
+  color: #A78BFA;
+  letter-spacing: 0.04em;
+}
+
+.footer-privacy-note {
+  font-size: 0.68rem;
+  color: #475569;
+}
+
+@media (max-width: 768px) {
+  .echo-app-root {
+    padding: 0.5rem 0.65rem;
+  }
+
+  .echo-app-footer {
+    margin-top: 0.75rem;
+    padding: 0.5rem 0;
+  }
+}

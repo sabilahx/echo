@@ -1,0 +1,21 @@
+==================================================
+      DAIR.AI EMOTION DATASET STATISTICAL SUMMARY
+==================================================
+
+Total Records: 20,000
+  - Train Split:      16,000 (80.0%)
+  - Validation Split: 2,000 (10.0%)
+  - Test Split:       2,000 (10.0%)
+
+Class Breakdown across Total Dataset:
+  - Sadness   :   5797 (28.98%)
+  - Joy       :   6761 (33.80%)
+  - Love      :   1641 (8.21%)
+  - Anger     :   2709 (13.54%)
+  - Fear      :   2373 (11.87%)
+  - Surprise  :    719 (3.60%)
+
+Text Length Metrics (in words):
+  - Mean length:   19.14 words
+  - Median length: 17.0 words
+  - Min / Max:     2 / 66 words

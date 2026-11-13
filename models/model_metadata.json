@@ -1,0 +1,14 @@
+{
+  "model_type": "LogisticRegression",
+  "vectorizer_type": "TfidfVectorizer",
+  "label_names": [
+    "sadness",
+    "joy",
+    "love",
+    "anger",
+    "fear",
+    "surprise"
+  ],
+  "accuracy": 0.881,
+  "f1_macro": 0.8399621933552947
+}

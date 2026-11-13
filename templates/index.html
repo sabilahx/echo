@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECHO 2.0 – Emotionally Intelligent Voice Companion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-background">
+        <div class="ambient-glow glow-1"></div>
+        <div class="ambient-glow glow-2"></div>
+        <div class="ambient-glow glow-3"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="brand-group">
+                <div class="brand-logo">
+                    <span class="logo-core"></span>
+                    <span class="logo-ring"></span>
+                    <span class="logo-icon">🎙️</span>
+                </div>
+                <div class="brand-text">
+                    <div class="brand-title-wrap">
+                        <h1 class="brand-name">ECHO <span class="version-tag-header">2.0</span></h1>
+                        <span class="badge-status {{ 'status-ready' if model_ready else 'status-warning' }}" id="systemStatusBadge">
+                            {{ 'AI Model Active (88.1% Acc)' if model_ready else 'Model Setup Required' }}
+                        </span>
+                    </div>
+                    <p class="tagline">More than understanding words. Understanding the feelings behind them.</p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button class="btn btn-secondary btn-sm" id="btnOpenBreathing" title="Guided Self-Regulation Breathing Exercise">
+                    <span>🌬️</span> Breathe
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btnToggleStats" title="View Session Emotion Analytics & Corrections">
+                    <span>📊</span> Session Insights
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btnOpenDiagnostics" title="View ML Classifier Evaluation & EDA">
+                    <span>🔬</span> Evaluation
+                </button>
+            </div>
+        </header>
+
+        <!-- BROWSER COMPATIBILITY / NOTICE BANNER -->
+        <div class="alert-banner" id="browserAlert" style="display: none;">
+            <div class="alert-content">
+                <span class="alert-icon" id="alertIcon">ℹ️</span>
+                <span class="alert-text" id="alertMessage">Checking voice capabilities...</span>
+            </div>
+            <button class="btn-close" id="btnCloseAlert" aria-label="Close notification">&times;</button>
+        </div>
+
+        <!-- CRISIS SAFETY HELPLINE BANNER -->
+        <div class="crisis-banner" id="crisisBanner" style="display: none;">
+            <div class="crisis-content">
+                <span class="crisis-icon">🛡️</span>
+                <div class="crisis-text">
+                    <strong>Support & Immediate Help:</strong> If you or someone you know is in distress, please know you are not alone.
+                    Call Tele-MANAS (<strong>14416</strong> or <strong>1800-891-4416</strong>), Vandrevala Foundation (<strong>9999 666 555</strong>), or US 988. Free, confidential support is available 24/7.
+                </div>
+            </div>
+            <button class="btn-close" id="btnCloseCrisis">&times;</button>
+        </div>
+
+        <!-- MAIN GRID LAYOUT -->
+        <main class="main-grid">
+            
+            <!-- LEFT COLUMN: VOICE INTERACTION & MULTI-TURN CONVERSATION -->
+            <section class="card conversation-card">
+                <div class="card-header">
+                    <div class="section-title-wrap">
+                        <span class="section-icon">💬</span>
+                        <h2>Voice & Text Interaction</h2>
+                        <span class="locale-badge" title="Web Speech Recognition Locale">en-IN (English - India)</span>
+                    </div>
+                    <div class="header-tools">
+                        <button class="btn btn-ghost btn-xs" id="btnClearHistory" title="Reset current session context">
+                            🗑️ Reset Session
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CONVERSATION STREAM -->
+                <div class="conversation-stream" id="conversationStream">
+                    <!-- Welcome Initial Message -->
+                    <div class="chat-bubble echo-bubble">
+                        <div class="bubble-avatar">✨</div>
+                        <div class="bubble-body">
+                            <div class="bubble-sender">ECHO Companion</div>
+                            <p class="bubble-text">
+                                Hello, I'm ECHO. I'm here to listen, recognize emotional cues, and help you navigate thoughts constructively. 
+                                Speak naturally by clicking the microphone below (English - India), or type your message.
+                            </p>
+                            <div class="sample-chips">
+                                <span class="chip-label">Try an example:</span>
+                                <button class="sample-chip" data-sample="I have an important interview tomorrow.">"I have an interview tomorrow..."</button>
+                                <button class="sample-chip" data-sample="You never do your work. I'm tired of dealing with you.">"You never do your work..."</button>
+                                <button class="sample-chip" data-sample="I studied so much, but I still failed. I don't know what to do.">"I studied so much, but failed..."</button>
+                                <button class="sample-chip" data-sample="I am so happy today!">"I am so happy today!"</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INTERACTION DOCK -->
+                <div class="interaction-dock">
+                    
+                    <!-- VOICE SPEECH HUB -->
+                    <div class="voice-hub">
+                        <div class="mic-container">
+                            <button class="mic-button" id="micBtn" aria-label="Toggle voice input" title="Click to speak (English - India)">
+                                <div class="mic-waves">
+                                    <span class="wave wave-1"></span>
+                                    <span class="wave wave-2"></span>
+                                    <span class="wave wave-3"></span>
+                                </div>
+                                <div class="mic-core">
+                                    <svg class="mic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/>
+                                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                                        <line x1="12" y1="19" x2="12" y2="22"/>
+                                        <line x1="8" y1="22" x2="16" y2="22"/>
+                                    </svg>
+                                </div>
+                            </button>
+                            <span class="mic-state-label" id="micStateLabel">Tap to speak naturally</span>
+                        </div>
+
+                        <!-- LIVE TRANSCRIPT AREA (EDITABLE) -->
+                        <div class="transcript-box" id="transcriptBox">
+                            <div class="transcript-header">
+                                <span class="transcript-tag">Recognized Speech (Editable)</span>
+                                <span class="transcript-hint" id="transcriptHint">Listening ready (en-IN)</span>
+                            </div>
+                            <textarea id="transcriptInput" class="transcript-textarea" rows="2" 
+                                placeholder="Voice speech will transcribe here in real-time. You can edit it before sending, or type directly below..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- TEXT INPUT FALLBACK & SUBMISSION -->
+                    <div class="input-controls">
+                        <div class="input-group">
+                            <input type="text" id="userTextInput" class="text-input" 
+                                placeholder="Type your feelings or thoughts here (e.g. 'I'm scared I'll mess it up')..." autocomplete="off">
+                            <button class="btn btn-primary btn-send" id="btnSend" title="Send for emotion analysis">
+                                <span>Send</span>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- RIGHT COLUMN: THE FOUR EMOTIONAL INTELLIGENCE MODULES -->
+            <aside class="sidebar-panels">
+
+                <!-- 1. MODULE A: SELF-AWARENESS & EMOTION INSIGHT CARD -->
+                <div class="card emotion-panel-card" id="emotionAnalysisPanel">
+                    <div class="card-header">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">🧠</span>
+                            <h2>Module A: Self-Awareness</h2>
+                        </div>
+                        <span class="pill-badge" id="dominantPill">Awaiting Input</span>
+                    </div>
+
+                    <div class="emotion-results-body" id="emotionResultsBody">
+                        <div class="placeholder-state" id="emotionPlaceholder">
+                            <div class="placeholder-icon">🔮</div>
+                            <p>Share a thought via voice or text to observe detected linguistic cues and emotional insights.</p>
+                        </div>
+
+                        <div class="active-emotion-view" id="activeEmotionView" style="display: none;">
+                            <div class="primary-emotion-header">
+                                <div class="emotion-avatar" id="emotionIconAvatar">✨</div>
+                                <div class="emotion-title-group">
+                                    <div class="emotion-label-row">
+                                        <h3 class="detected-emotion-name" id="detectedEmotionName">Joy</h3>
+                                        <span class="confidence-badge" id="confidenceBadge">87.4% Confidence</span>
+                                    </div>
+                                    <p class="emotion-summary-text" id="emotionSummaryText">Linguistic markers suggest feelings of happiness.</p>
+                                </div>
+                            </div>
+
+                            <!-- LINGUISTIC CUES ATTRIBUTION (XAI) -->
+                            <div class="cues-section">
+                                <span class="cues-title">Influential Linguistic Cues:</span>
+                                <div class="cues-tags-wrap" id="cuesTagsWrap">
+                                    <span class="cue-tag">worried</span>
+                                    <span class="cue-tag">interview</span>
+                                </div>
+                            </div>
+
+                            <!-- TOP ALTERNATIVE PREDICTIONS -->
+                            <div class="alternatives-box" id="alternativesBox">
+                                <span class="alt-title">Alternative Possibilities:</span>
+                                <div class="alt-chips-wrap" id="altChipsWrap">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- USER EMOTION CONFIRMATION & FEEDBACK -->
+                            <div class="feedback-confirmation-box" id="feedbackConfirmationBox">
+                                <p class="confirmation-prompt-text" id="confirmationPromptText">Does that describe how you're feeling?</p>
+                                <div class="feedback-actions" id="feedbackActions">
+                                    <button class="btn btn-xs btn-feedback-yes" id="btnFeedbackYes">✓ Yes, that's right</button>
+                                    <button class="btn btn-xs btn-feedback-no" id="btnFeedbackNo">✎ Not quite</button>
+                                </div>
+                                <!-- Emotion correction selector (hidden until user clicks 'Not quite') -->
+                                <div class="correction-dropdown-wrap" id="correctionDropdownWrap" style="display: none;">
+                                    <span>Which feeling fits better?</span>
+                                    <div class="correction-buttons">
+                                        <button class="btn-correct-chip" data-emotion="sadness">🌧️ Sadness</button>
+                                        <button class="btn-correct-chip" data-emotion="joy">✨ Joy</button>
+                                        <button class="btn-correct-chip" data-emotion="anger">🔥 Anger</button>
+                                        <button class="btn-correct-chip" data-emotion="fear">⚡ Fear</button>
+                                        <button class="btn-correct-chip" data-emotion="love">💖 Love</button>
+                                        <button class="btn-correct-chip" data-emotion="surprise">🌟 Surprise</button>
+                                    </div>
+                                </div>
+                                <span class="feedback-acknowledgement" id="feedbackAckText" style="display: none;">Thank you for your feedback!</span>
+                            </div>
+
+                            <!-- PROBABILITY DISTRIBUTION BARS -->
+                            <div class="all-emotions-distribution" id="allEmotionsDistribution">
+                                <div class="dist-header">
+                                    <span>Model Probability Distribution</span>
+                                </div>
+                                <div class="bars-container" id="distributionBars">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <!-- LINGUISTIC CUES DISCLAIMER -->
+                            <div class="linguistic-disclaimer">
+                                <span class="info-icon">ℹ️</span>
+                                <p id="disclaimerText">
+                                    Predictions represent linguistic cues and word associations in text, not a definitive psychological diagnosis of your inner emotional state.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. MODULE C: EMPATHY & CONTEXTUAL RESPONSE -->
+                <div class="card empathy-card" id="empathyResponseCard">
+                    <div class="card-header">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">🤝</span>
+                            <h2>Module C: Empathetic Support</h2>
+                        </div>
+                        <div class="tts-controls" id="ttsControls">
+                            <button class="btn btn-audio" id="btnAudioPlay" title="Listen with Text-to-Speech (English - India)">
+                                <span class="audio-icon" id="audioIcon">🔊</span>
+                                <span class="audio-label" id="audioLabel">Speak</span>
+                            </button>
+                            <button class="btn btn-ghost btn-xs" id="btnCopyResponse" title="Copy response text">
+                                📋 Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="empathy-quote-box">
+                            <p class="empathy-text" id="empathyText">
+                                ECHO's empathetic response will appear here after analyzing your message.
+                            </p>
+                            <!-- Animated Soundwaves while TTS is playing -->
+                            <div class="tts-waveform" id="ttsWaveform" style="display: none;">
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                                <span class="sound-bar"></span>
+                            </div>
+                        </div>
+
+                        <!-- MODULE B: SELF-REGULATION CALLOUT -->
+                        <div class="self-reg-callout" id="selfRegCallout" style="display: none;">
+                            <div class="self-reg-header">
+                                <span>🌬️ Module B: Self-Regulation</span>
+                            </div>
+                            <p class="self-reg-desc">High emotional tension detected. Would you like a brief 4-second box breathing pause?</p>
+                            <button class="btn btn-sm btn-breathing-action" id="btnTriggerBreathing">Begin Box Breathing Pause</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. MODULE D: SOCIAL SKILLS ("SAY IT BETTER" IN 3 STYLES) -->
+                <div class="card say-better-card" id="sayBetterCard">
+                    <div class="card-header">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">💡</span>
+                            <h2>Module D: Say It Better</h2>
+                        </div>
+                        <span class="strategy-tag" id="strategyTag">Constructive Reframing</span>
+                    </div>
+                    <div class="card-body">
+                        <!-- Style selection tabs: Polite, Professional, Friendly -->
+                        <div class="style-tabs">
+                            <button class="style-tab-btn active" data-style="polite">Polite</button>
+                            <button class="style-tab-btn" data-style="professional">Professional</button>
+                            <button class="style-tab-btn" data-style="friendly">Friendly</button>
+                        </div>
+
+                        <div class="say-better-comparison">
+                            <div class="version-block original-block">
+                                <span class="version-tag">Original Tone</span>
+                                <p class="version-text" id="sayBetterOriginal">"You never do your work. I'm tired of dealing with you."</p>
+                            </div>
+                            <div class="transformation-arrow">➔</div>
+                            <div class="version-block suggested-block">
+                                <div class="suggested-header">
+                                    <span class="version-tag" id="styleVersionTag">Polite Style</span>
+                                    <button class="btn-copy-chip" id="btnCopyConstructive" title="Copy constructive text">📋 Copy</button>
+                                </div>
+                                <p class="version-text" id="sayBetterSuggested">"I feel frustrated because the work hasn't been completed as planned. Can we discuss how to divide the remaining tasks?"</p>
+                            </div>
+                        </div>
+                        <div class="ei-principle-note">
+                            <strong>Emotional Intelligence Principle:</strong>
+                            <span id="eiPrincipleText">Replaces accusatory "you never" language with an objective "I-statement" and collaborative task division.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. REFLECTION MOMENT -->
+                <div class="card reflection-card" id="reflectionCard">
+                    <div class="card-header">
+                        <div class="section-title-wrap">
+                            <span class="section-icon">🪞</span>
+                            <h2>Reflection Moment</h2>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="reflection-prompt-box">
+                            <p class="reflection-question" id="reflectionQuestion">
+                                What is one thing you could do differently when handling a similar situation?
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </aside>
+        </main>
+    </div>
+
+    <!-- MODAL 1: INTERACTIVE BOX BREATHING EXERCISE (MODULE B: SELF-REGULATION) -->
+    <div class="modal-backdrop" id="modalBreathing" style="display: none;">
+        <div class="modal-card modal-breathing-card">
+            <div class="modal-header">
+                <h3>🌬️ Module B: Box Breathing Pause</h3>
+                <button class="modal-close" id="btnCloseBreathing">&times;</button>
+            </div>
+            <div class="modal-body breathing-body">
+                <p class="breathing-intro">
+                    Take a gentle moment to regulate your nervous system. Inhale (4s), Hold (4s), Exhale (4s), Hold (4s).
+                </p>
+                <div class="breathing-circle-container">
+                    <div class="breathing-circle" id="breathingCircle">
+                        <span class="breathing-text" id="breathingInstruction">Inhale</span>
+                        <span class="breathing-timer" id="breathingTimer">4</span>
+                    </div>
+                </div>
+                <div class="breathing-controls">
+                    <button class="btn btn-primary" id="btnStartBreathing">Start Cycle</button>
+                    <button class="btn btn-secondary" id="btnStopBreathing" style="display: none;">Stop</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: SESSION INSIGHTS (MODULE A & SESSION ANALYTICS) -->
+    <div class="modal-backdrop" id="modalStats" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>📊 Session Emotional Intelligence Summary</h3>
+                <button class="modal-close" id="btnCloseStats">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">
+                    Comprehensive overview of linguistic emotion cues and user-confirmed corrections during this session.
+                    <em>(Notice: Session statistics only — not a clinical or psychological diagnosis.)</em>
+                </p>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-number" id="statTotalAnalyzed">0</div>
+                        <div class="stat-label">Messages Analyzed</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="statDominantEmotion">None</div>
+                        <div class="stat-label">Dominant Predicted</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number" id="statFeedbackCount">0</div>
+                        <div class="stat-label">User Corrections</div>
+                    </div>
+                </div>
+
+                <div class="session-breakdown-list">
+                    <h4>Predicted Emotion Distribution</h4>
+                    <div id="sessionBreakdownItems" class="session-items-wrap">
+                        <p class="text-muted">No messages analyzed yet in this session.</p>
+                    </div>
+                </div>
+
+                <div class="session-breakdown-list" style="margin-top: 20px;">
+                    <h4>User-Confirmed Emotions (Feedback)</h4>
+                    <div id="userConfirmedItems" class="session-items-wrap">
+                        <p class="text-muted">No emotion corrections recorded yet.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btnDismissStats">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: EVALUATION & MODEL DIAGNOSTICS -->
+    <div class="modal-backdrop" id="modalDiagnostics" style="display: none;">
+        <div class="modal-card modal-lg">
+            <div class="modal-header">
+                <h3>🔬 Machine Learning Benchmark Evaluation & EDA</h3>
+                <button class="modal-close" id="btnCloseDiagnostics">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="eval-metrics-strip">
+                    <div class="metric-pill">
+                        <span class="m-val">88.10%</span>
+                        <span class="m-lbl">Test Accuracy</span>
+                    </div>
+                    <div class="metric-pill">
+                        <span class="m-val">84.00%</span>
+                        <span class="m-lbl">Macro F1-Score</span>
+                    </div>
+                    <div class="metric-pill">
+                        <span class="m-val">88.31%</span>
+                        <span class="m-lbl">Weighted F1</span>
+                    </div>
+                    <div class="metric-pill">
+                        <span class="m-val">20,000</span>
+                        <span class="m-lbl">DAIR.AI Samples</span>
+                    </div>
+                </div>
+
+                <div class="eval-tabs">
+                    <button class="tab-btn active" data-tab="tab-cm">Confusion Matrix</button>
+                    <button class="tab-btn" data-tab="tab-metrics">Metrics by Emotion</button>
+                    <button class="tab-btn" data-tab="tab-dist">Dataset Distribution</button>
+                    <button class="tab-btn" data-tab="tab-words">Linguistic Cues</button>
+                </div>
+
+                <div class="tab-content" id="tab-cm">
+                    <p class="chart-caption">Confusion Matrix evaluated on 2,000 DAIR.AI Emotion test samples.</p>
+                    <div class="chart-wrapper">
+                        <img src="/api/results/confusion_matrix.png" alt="Confusion Matrix" class="eval-img" onerror="this.alt='Chart not generated yet.'">
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-metrics" style="display: none;">
+                    <p class="chart-caption">Precision, Recall, and F1-score breakdown across all six emotion classes.</p>
+                    <div class="chart-wrapper">
+                        <img src="/api/results/metrics_summary.png" alt="Metrics Summary" class="eval-img" onerror="this.alt='Chart not generated yet.'">
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-dist" style="display: none;">
+                    <p class="chart-caption">Class distribution across 20,000 DAIR.AI Emotion records.</p>
+                    <div class="chart-wrapper">
+                        <img src="/api/results/emotion_distribution.png" alt="Dataset Distribution" class="eval-img" onerror="this.alt='Chart not generated yet.'">
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-words" style="display: none;">
+                    <p class="chart-caption">Top frequent linguistic markers per emotion category.</p>
+                    <div class="chart-wrapper">
+                        <img src="/api/results/word_frequencies.png" alt="Word Frequencies" class="eval-img" onerror="this.alt='Chart not generated yet.'">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btnDismissDiagnostics">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
